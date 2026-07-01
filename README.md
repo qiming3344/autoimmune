@@ -1,172 +1,95 @@
-# 蜂巢·免疫系统 Pro v1.0 (AutoImmune)
+# 蜂巢·免疫系统 AutoImmune Pro v2.0
 
-> 自愈系统免疫引擎 | 自检测→自修复→自上报 | 插件架构 | 纯Python
+> 通用自愈免疫引擎 | 5大引擎融合 | 15预置Check | LLM诊断 | Web面板
 
-[![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/Version-1.0.0-orange.svg)]()
+[![Python](https://img.shields.io/badge/Python-3.8+-blue)](https://www.python.org/)
+[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
+[![Version](https://img.shields.io/badge/Version-2.0.0-orange)]()
 
-AutoImmune是一个**自愈系统免疫引擎**，吸收5大顶级监控系统的精华：
-- **Prometheus** — SQLite时间序列趋势数据库
-- **Datadog** — 动态阈值调整（非固定阈值）
-- **PagerDuty** — P0/P1/P2分级告警升级
-- **Chaos Monkey** — 受控故障注入消防演练
-- **AWS** — 磁盘/内存自动清理
+AutoImmune是一个**通用自愈免疫引擎**，吸收5大顶级监控系统的精华，1300行纯Python，零外部依赖。自检测→自修复→自上报→修不了升级告警。
 
-商业版以**插件架构**独立运行，不绑定蜂巢系统，可接入任何项目。
+## 5大引擎融合
 
-## 🎯 为什么需要免疫系统？
+| 引擎 | 吸收自 | 实现 |
+|------|--------|------|
+| 时序数据库 | **Prometheus** | SQLite轻量存储 |
+| 动态阈值 | **Datadog** | 中位数+3σ自适应 |
+| 告警分级 | **PagerDuty** | P0/P1/P2三级 |
+| 消防演练 | **Chaos Monkey** | 定期故障注入验证 |
+| 资源监控 | **AWS** | 磁盘/内存自动清理 |
 
-```
-传统监控: 告警 → 等人工处理 → 修复 (平均15分钟+)
-AutoImmune: 检测 → 自动修复 → 修复失败则升级上报 (秒级)
-```
+## 为什么选择AutoImmune？
 
-| 对比 | AutoImmune Pro | Datadog | PagerDuty | Prometheus |
-|------|---------------|---------|-----------|------------|
-| 自动修复 | ✅ 核心能力 | ❌ 仅告警 | ❌ 仅告警 | ❌ 仅采集 |
-| 动态阈值 | ✅ | ✅ | ❌ | ❌ 固定阈值 |
-| 消防演练 | ✅ Chaos模式 | ❌ | ❌ | ❌ |
-| 插件架构 | ✅ | ❌ | ❌ | ❌ |
-| 定价 | ¥99买断 | $15/月+$5/主机 | $21/月 | 免费但需自己修 |
-| 数据所有权 | ✅ 本地 | ❌ 云 | ❌ 云 | ✅ 本地 |
+| 对比 | AutoImmune Pro | Datadog | PagerDuty | OneUptime |
+|------|:----------:|:-------:|:---------:|:---------:|
+| 自动修复 | ✅ 核心能力 | ❌ 仅告警 | ❌ 仅告警 | ✅ PR生成 |
+| 动态阈值 | ✅ 3σ自适应 | ✅ | ❌ | ✅ |
+| 消防演练 | ✅ 独有 | ❌ | ❌ | ❌ |
+| LLM诊断 | ✅ 可选 | ❌ | ❌ | ✅ |
+| 告警关联降噪 | ✅ | ❌ | ❌ | ✅ |
+| 部署 | **单文件·1秒** | Agent安装 | SaaS | Docker集群 |
+| 定价 | **免费开源** | $15/月/主机 | $21/月 | 免费开源 |
 
-## 🚀 快速开始
+## 快速开始
 
 ```bash
-# 安装
-git clone https://github.com/qiming3344/autoimmune.git
-cd autoimmune
-
-# 一次性检查
+# 单次检查
 python auto_immune_pro.py --once
 
-# 守护模式 (每60秒)
-python auto_immune_pro.py --daemon
+# 守护模式(每60秒)
+python auto_immune_pro.py --daemon 60
 
-# 添加自定义插件
-python auto_immune_pro.py --add-plugin my_check.py
+# Web仪表盘
+python auto_immune_pro.py --web
+
+# 演示
+python auto_immune_pro.py --demo
 ```
 
-## 🛡️ 五大核心引擎
-
-### 1. 📊 趋势数据库 (Prometheus精华)
-```python
-# SQLite时间序列存储
-# 追踪: API响应时间、错误率、内存使用、磁盘空间
-# 自动计算: 平均/最大/最小/P95/标准差
-```
-
-### 2. 🎚️ 动态阈值 (Datadog精华)
-```python
-# 不是写死"CPU>80%告警"
-# 而是: 学习历史基线 → 偏离2个标准差 → 告警
-# 自动适应流量变化
-```
-
-### 3. 🚨 分级升级 (PagerDuty精华)
-```
-P2 (轻微) → 自动修复 + 日志记录
-P1 (严重) → 自动修复 + 通知管理员
-P0 (致命) → 尝试修复 + 立即告警 + 熔断
-```
-
-### 4. 🔥 消防演练 (Chaos Monkey精华)
-```bash
-python auto_immune_pro.py --drill
-# 安全地注入故障 → 验证自动修复能力 → 生成演练报告
-```
-
-### 5. 💾 资源守护 (AWS精华)
-```python
-# 磁盘>80% → 自动清理旧日志
-# 内存>90% → 重启泄漏进程
-# 文件句柄不足 → 自动释放
-```
-
-## 🔌 插件架构
+## SDK用法
 
 ```python
-# my_check.py — 自定义检查插件
-def check():
-    """返回 (status, message)"""
-    import requests
-    try:
-        r = requests.get("https://my-api.com/health", timeout=5)
-        return ("ok", f"API正常 {r.elapsed.total_seconds()}s") if r.status_code == 200 else ("error", f"状态码{r.status_code}")
-    except Exception as e:
-        return ("error", str(e))
+from auto_immune_pro import AutoImmune, Check, BuiltinChecks
 
-def repair():
-    """自动修复逻辑（可选）"""
-    import subprocess
-    subprocess.run(["systemctl", "restart", "my-api"])
-    return ("ok", "已重启my-api服务")
+ai = AutoImmune('production', notify_channels=['dingtalk', 'stdout'])
+bc = BuiltinChecks()
+
+ai.add_checks(
+    bc.cpu(90), bc.memory(85), bc.disk(max_pct=80),
+    bc.http_endpoint('https://api.example.com/health'),
+    bc.ssl_expiry('example.com', 30),
+)
+result = ai.run()
+# → LLM诊断 + 告警关联 + 消防演练 + 升级检测 + 多渠道通知
 ```
+
+## 15个预置Check
+
+cpu | memory | disk | process_alive | network | http_endpoint | tcp_service | ssl_expiry | dns_resolve | file_age | log_errors | port_listening | response_time | command_output | env_var_set
+
+## LLM诊断（可选）
 
 ```bash
-# 加载自定义插件
-python auto_immune_pro.py --add-plugin my_check.py
-# 查看所有已加载插件
-python auto_immune_pro.py --list-plugins
+# 配了Key = AI根因分析
+set AUTOIMMUNE_LLM_KEY=sk-你的密钥
+set AUTOIMMUNE_LLM_URL=https://api.deepseek.com/v1/chat/completions
+
+# 不配Key = 规则引擎降级 → 零费用
 ```
 
-## 📊 输出示例
+## 定价
 
-```
-$ python auto_immune_pro.py --once
+| 版本 | 价格 | 说明 |
+|------|------|------|
+| 社区版 | **免费** (MIT开源) | 所有功能 |
+| 专业版 | ¥99 永久买断 | 商用授权·技术支持 |
+| 企业版 | ¥299 永久买断 | 源码可用·定制Check |
 
-═══════════════════════════════════
-  AutoImmune Pro v1.0 体检报告
-  ️ 2026-07-01 10:00:00
-═══════════════════════════════════
+## 反馈
 
-[PASS] 磁盘空间: 45% (234GB/500GB)
-[PASS] 内存使用: 62% (9.9GB/16GB)
-[PASS] API响应: 234ms (基线: 250ms)
-[WARN] 错误率: 2.3% (阈值: 2.0%)
-       → 自动修复: 重启worker进程...
-       → 修复完成, 错误率恢复至0.8%
-[PASS] 备份完整性: D+E双盘一致
-
-结果: 4通过, 1自动修复成功
-```
-
-## 🏗️ 架构
-
-```
-AutoImmune守护进程
-├── 采集层: 每N秒采集指标
-├── 分析层: 动态阈值 + 趋势检测
-├── 决策层: P0/P1/P2分级
-├── 修复层: 自动修复动作
-├── 告警层: 钉钉/邮件/Webhook
-└── 插件层: 用户自定义检查
-```
-
-## 💰 定价
-
-| 版本 | 价格 | 适用场景 |
-|------|------|----------|
-| 社区版 | 免费开源 | 个人项目，基础检查 |
-| 专业版 | ¥99买断 | 小团队，5个自定义插件 |
-| 企业版 | ¥299买断 | 无限插件+钉钉/邮件告警 |
-
-## 🗺️ 路线图
-
-- [x] 5大引擎融合
-- [x] 插件架构
-- [x] SQLite趋势数据库
-- [x] 动态阈值
-- [x] 消防演练模式
-- [ ] Web仪表盘 (计划中)
-- [ ] 分布式集群监控 (计划中)
-- [ ] 机器学习异常检测 (计划中)
-
-## 📄 许可证
-
-MIT License — 详见 [LICENSE](LICENSE)
+- 🐛 [提交Issue](https://github.com/qiming3344/autoimmune/issues)
+- 📧 weiweilbj@163.com
 
 ---
 
-**蜂巢AI实验室** | 让系统学会自己修自己
+**蜂巢AI实验室** | 让系统学会自己修自己 | 蜂群智能·免疫自愈
